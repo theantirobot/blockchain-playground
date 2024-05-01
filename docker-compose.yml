@@ -1,0 +1,43 @@
+# docker-compose.yml
+version: '3.8'
+services:
+  ganache:
+    image: trufflesuite/ganache-cli
+    ports:
+      - "8545:8545"
+    command: ganache-cli --host 0.0.0.0 --port 8545
+
+  subscription-service:
+    build: ./subscriptions-service
+    volumes:
+      - ./subscriptions-service:/app
+    ports:
+      - "4001:4001"
+
+  gateway:
+    build: ./gateway
+    volumes:
+      - ./gateway:/app
+    ports:
+      - "4000:4000"
+
+  indexer:
+    build: ./indexer
+    volumes:
+      - ./indexer:/app
+
+  sample-app:
+    build: ./sample-app
+    volumes:
+      - ./sample-app:/app
+    ports:
+      - "3001:3001"
+
+  front-end:
+    build: ./front-end
+    volumes:
+      - ./front-end:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
