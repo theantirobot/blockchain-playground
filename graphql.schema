@@ -1,0 +1,22 @@
+type Query {
+    subscriptions(first: string, after: string): SubscriptionsPage
+}
+
+type Mutation {
+  subscribe(input: SubscribeInput!): Subscription
+}
+
+input SubscribeInput {
+  address: string!
+  webhookUrl: string!
+}
+
+type Subscription {
+  id: string!
+  firstBlock: Block
+}
+
+type Block {
+    id: string;
+}
+

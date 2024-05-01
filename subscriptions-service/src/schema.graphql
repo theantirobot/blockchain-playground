@@ -1,0 +1,42 @@
+  type Query {
+    subscriptions(first: Int, after: String): SubscriptionConnection
+    subscription(id: ID!): Subscription
+  }
+
+  type Mutation {
+    subscribe(input: SubscribeInput!): Subscription
+    updateSubscription(id: ID!, input: SubscribeInput!): Subscription
+    unsubscribe(id: ID!): Boolean
+  }
+
+  input SubscribeInput {
+    address: String!
+    webhookUrl: String!
+  }
+
+  type Subscription @key(fields: "id") {
+    id: ID!
+    firstBlock: Block
+    webhookUrl: String
+    address: String
+    isDeleted: Boolean
+  }
+
+  type SubscriptionConnection {
+    edges: [SubscriptionEdge]
+    pageInfo: PageInfo
+  }
+
+  type SubscriptionEdge {
+    node: Subscription
+    cursor: String!
+  }
+
+  type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean!
+  }
+
+  type Block {
+    id: ID!
+  }

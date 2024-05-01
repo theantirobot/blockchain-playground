@@ -1,0 +1,45 @@
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+type Block {
+  id: ID!
+}
+
+type Mutation {
+  subscribe(input: SubscribeInput!): Subscription
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+}
+
+type Query {
+  subscriptions(first: Int, after: String): SubscriptionConnection
+}
+
+input SubscribeInput {
+  address: String!
+  webhookUrl: String!
+}
+
+type Subscription {
+  id: ID!
+  firstBlock: Block
+  webhookUrl: String
+  address: String
+}
+
+type SubscriptionConnection {
+  edges: [SubscriptionEdge]
+  pageInfo: PageInfo
+}
+
+type SubscriptionEdge {
+  node: Subscription
+  cursor: String!
+}
+

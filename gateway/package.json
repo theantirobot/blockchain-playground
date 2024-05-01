@@ -1,0 +1,26 @@
+{
+  "name": "gateway",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "theantirobot <jeremy@robotsandwich.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/gateway.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "node ./__tests__/gateway.test.js",
+    "start": "ts-node ./lib/gateway.ts"
+  },
+  "dependencies": {
+    "@apollo/gateway": "^2.7.2",
+    "@apollo/server": "^4.10.2",
+    "graphql": "^16.8.1",
+    "ts-node": "^10.9.2"
+  }
+}
