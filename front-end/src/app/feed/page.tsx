@@ -33,7 +33,7 @@ const FeedPage = () => {
     }, []);
 
     const sortedTransactions = useMemo(() => {
-        return Object.entries(transactions).sort(([hashA, tA], [hashB, tB]) => {
+        return transactions.sort((tA, tB) => {
             if (tA.blockNumber === tB.blockNumber) {
                 return tA.transactionIndex - tB.transactionIndex;
             } else if (tB.blockNumber > tA.blockNumber) {
@@ -48,7 +48,7 @@ const FeedPage = () => {
 
     return (
         <div className="m-2 flex flex-col gap-2">
-            {transactions.map((tx) => {
+            {sortedTransactions.map((tx) => {
                         return (
                             <Card key={tx.hash} className="p-2">
                                 <CardTitle>{tx.hash}</CardTitle>
