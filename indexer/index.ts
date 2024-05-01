@@ -27,6 +27,10 @@ const poller = new EthereumBlockPoller({
     web3,
     onBlock: async (block) => {
         console.log('Block!')
+        if (!block.transactions || block.transactions.length ===  0) {
+            console.log(`No transactions in block ${block.number}`)
+            return;
+        }
         const addresses = new Set<string>();
         const transactions = []
         for (let i = 0; i < block.transactions.length; i++) {

@@ -1,8 +1,8 @@
 import { Subscription, SubscriptionFilter } from "./generated/graphql";
 
 const subscriptions: Subscription[] = [
-    { id: "1", webhookUrl: "www.sqs.com", address: "0x123"},
-    { id: "2", webhookUrl: "www.sqs.com", address: "0x123"},
+    // { id: "1", webhookUrl: "www.sqs.com", address: "0x123"},
+    // { id: "2", webhookUrl: "www.sqs.com", address: "0x123"},
 ];
 
 export interface SubscriptionInput {
