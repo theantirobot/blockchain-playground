@@ -7,12 +7,12 @@ import axios from 'axios';
 const subscriptions = new Subscriptions({
     client: new ApolloClient({
         link: new HttpLink({
-            uri: 'http://localhost:4001', // Replace with your GraphQL server URL
+            uri: 'http://subscription-service:4001', // Replace with your GraphQL server URL
         }),
         cache: new InMemoryCache()
         })
 });
-const web3 = new Web3('http://127.0.0.1:8545');
+const web3 = new Web3('http://ganache:8545');
 
 // Custom replacer function to handle BigInt values
 function bigIntReplacer(key: string, value: any): any {

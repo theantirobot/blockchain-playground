@@ -20,11 +20,14 @@ services:
       - ./gateway:/app
     ports:
       - "4000:4000"
-
+    depends_on:
+      - subscription-service
   indexer:
     build: ./indexer
     volumes:
       - ./indexer:/app
+    depends_on:
+      - ganache
 
   sample-app:
     build: ./sample-app
@@ -41,3 +44,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+    depends_on:
+      - gateway
+      - ganache
+      - sample-app
+
