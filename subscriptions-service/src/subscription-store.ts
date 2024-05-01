@@ -1,4 +1,4 @@
-import { Subscription } from "./generated/graphql";
+import { Subscription, SubscriptionFilter } from "./generated/graphql";
 
 const subscriptions: Subscription[] = [
     { id: "1", webhookUrl: "www.sqs.com", address: "0x123"},
@@ -11,7 +11,10 @@ export interface SubscriptionInput {
 }
 
 export default { 
-    getSubsriptions: async () => {
+    getSubsriptions: async (filter?: SubscriptionFilter | undefined | null) => {
+        if (filter?.addresses && filter.addresses.length > 0) {
+            return subscriptions.filter(sub => filter!.addresses!.includes(sub.address!));
+        }
         return [...subscriptions]
     },
     getSubscription: async (id: string) => {

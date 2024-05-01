@@ -11,9 +11,9 @@ const arrayToConnection = (array: any[]) => {
 }
 export const resolvers: Resolvers = {
     Query: {
-        subscriptions: async (): Promise<SubscriptionConnection> => {
+        subscriptions: async (_: any, { filter }): Promise<SubscriptionConnection> => {
             console.log("Subscriptions");
-            return arrayToConnection(await SubscriptionStore.getSubsriptions()) as SubscriptionConnection;
+            return arrayToConnection(await SubscriptionStore.getSubsriptions(filter)) as SubscriptionConnection;
         },
         subscription: async (_: any, { id }: any): Promise<Subscription> => {
             console.log("Subscription");
@@ -39,5 +39,4 @@ export const resolvers: Resolvers = {
             return SubscriptionStore.deleteSubscription(id);
         }
     },
-
 }

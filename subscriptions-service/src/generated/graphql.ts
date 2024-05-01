@@ -64,6 +64,7 @@ export type QuerySubscriptionArgs = {
 
 export type QuerySubscriptionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SubscriptionFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -91,6 +92,10 @@ export type SubscriptionEdge = {
   __typename?: 'SubscriptionEdge';
   cursor: Scalars['String']['output'];
   node?: Maybe<Subscription>;
+};
+
+export type SubscriptionFilter = {
+  addresses?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -176,6 +181,7 @@ export type ResolversTypes = {
   Subscription: ResolverTypeWrapper<{}>;
   SubscriptionConnection: ResolverTypeWrapper<SubscriptionConnection>;
   SubscriptionEdge: ResolverTypeWrapper<SubscriptionEdge>;
+  SubscriptionFilter: SubscriptionFilter;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -192,6 +198,7 @@ export type ResolversParentTypes = {
   Subscription: {};
   SubscriptionConnection: SubscriptionConnection;
   SubscriptionEdge: SubscriptionEdge;
+  SubscriptionFilter: SubscriptionFilter;
 };
 
 export type BlockResolvers<ContextType = any, ParentType extends ResolversParentTypes['Block'] = ResolversParentTypes['Block']> = {
