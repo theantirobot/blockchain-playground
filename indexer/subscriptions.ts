@@ -1,4 +1,4 @@
-import { ApolloClient } from "@apollo/client";
+import { ApolloClient, gql } from "@apollo/client/core";
 
 export const GET_SUBSCRIPTIONS = gql`
     query GetSubscriptions {
@@ -25,11 +25,16 @@ export const GET_SUBSCRIPTIONS = gql`
 type SubscriptionsProps = {
     client: ApolloClient<unknown>;
 }
-class Subscriptions {
+export class Subscriptions {
+    client: ApolloClient<unknown>;
     constructor(props: SubscriptionsProps) {
         this.client = props.client;
     }
-    async getSubscriptions() {
-
+    public async getSubscriptions(addresses?: string[]) {
+        const { data } = await this.client.query({
+            query: GET_SUBSCRIPTIONS,
+            variables: { filter: addresses }
+        });
+        return data.subscriptions.edges.map((edge: any) => edge.node);
     }
 }

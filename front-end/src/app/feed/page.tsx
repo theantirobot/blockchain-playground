@@ -11,51 +11,34 @@ import {
     CardTitle,
   } from "@/components/ui/card"
 
+  type TransactionData = Transaction & {
+    blockNumber: number;
+    transactionIndex: number;
+    hash: string;
+  }
+  
 const FeedPage = () => {
-    const [blocks, setBlocks ] = useState<Block[]>([]);
-    const [transactions, setTransactions] = useState<Record<string, { tx: Transaction, block: Block, blockIndex: number }>>({});
-    const [transactionsList, setTransactionsList] = useState<Transaction[]>([]);
-    const { loading, error, data, refetch} = useQuery(GET_SUBSCRIPTIONS, {
-        variables: {
-            first: 10, // Adjust based on how many items you want to fetch
-        },
-        });
-    const web3 = useMemo(() => {
-        return new Web3('http://127.0.0.1:8545');
-    }, [])
-    useEffect(() => {
-        const poller = new EthereumBlockPoller({
-            web3, 
-            onBlock: (block: Block) => {
-                setBlocks((blocks => [...blocks, block]))
-            }
-        });
-        poller.startPolling(1000);
-        return () => {
-            poller.stopPolling();
-        }
-    }, []);
+    const [transactions, setTransactions] = useState<TransactionData[]>([]);
 
     useEffect(() => {
-        refetch();
-        blocks.forEach(async block => {
-            block?.transactions?.forEach((transaction, index) => {
-                if (!transactions[transaction.toString()]) {
-                    web3.eth.getTransaction(transaction.toString()).then(tx => {
-                        setTransactions((txs) => ({...txs, [tx.hash]: { tx, block, blockIndex: index }}));
-                        
-                    });
-                }
-            })
-        });
-    }, [blocks])
+        const ws = new WebSocket('ws://localhost:3001');
+        ws.onmessage = (event) => {
+            const newTransactions = JSON.parse(event.data);
+            setTransactions(newTransactions);
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, []);
+
     const sortedTransactions = useMemo(() => {
         return Object.entries(transactions).sort(([hashA, tA], [hashB, tB]) => {
-            if (tA.block.number === tB.block.number) {
-                return tA.blockIndex - tB.blockIndex;
-            } else if (tB.block.number > tA.block.number) {
+            if (tA.blockNumber === tB.blockNumber) {
+                return tA.transactionIndex - tB.transactionIndex;
+            } else if (tB.blockNumber > tA.blockNumber) {
                 return 1;
-            } else if (tB.block.number < tA.block.number) {
+            } else if (tB.blockNumber < tA.blockNumber) {
                 return -1;
             } else {
                 return 0;
@@ -63,41 +46,18 @@ const FeedPage = () => {
         })
     }, [transactions])
 
-    // group subscriptions by callback url
-    const callbackStuff = useMemo(() => {
-        if (!data?.subscriptions?.edges) return {};
-        
-        return data?.subscriptions?.edges.reduce((acc: Record<string, Subscription[]>, {node}: { node: Subscription} ) => {
-            console.log("Doing node" + JSON.stringify(node));
-            if (!acc[node.webhookUrl]) {
-                acc[node.webhookUrl] = [];
-            }
-            acc[node.webhookUrl].push(node);
-            return acc;
-        }, {} as Record<string,  { node: any}>)
-    }, [data])
     return (
         <div className="m-2 flex flex-col gap-2">
-            {Object.keys(callbackStuff).map(url=> {
-                return (<div>
-                    {url}
-                    {sortedTransactions.filter(([hash, { tx: transaction, block }]) => {
-                        return callbackStuff[url].find((subscription: Subscription )=> {
-
-                            return subscription.address.toLowerCase() === transaction.from?.toLowerCase() || subscription.address.toLowerCase() === transaction.to?.toLowerCase()});
-                    }).map(([hash, { tx: transaction, block }]) => {
+            {transactions.map((tx) => {
                         return (
-                            <Card key={hash} className="p-2">
-                                <CardTitle>{hash}</CardTitle>
-                                <CardContent>{`${transaction.from} -> ${transaction.to} : ${web3.utils.fromWei(transaction.value!, "ether")}`}</CardContent>
+                            <Card key={tx.hash} className="p-2">
+                                <CardTitle>{tx.hash}</CardTitle>
+                                <CardContent>{`${tx.from} -> ${tx.to} : ${Web3.utils.fromWei(tx.value!, "ether")}`}</CardContent>
                             </Card>
                         )
                     })}
                     </div>)
-            })}
 
-        </div>
-    )
 }
 export default FeedPage;
 
