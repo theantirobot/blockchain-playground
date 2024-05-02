@@ -9,6 +9,7 @@ export const GET_SUBSCRIPTIONS = gql`
                 id
                 address
                 webhookUrl
+                confirmationCount
             }
             }
             pageInfo {
@@ -25,6 +26,7 @@ export const GET_SUBSCRIPTION_DETAILS = gql`
             id
             address
             webhookUrl
+            confirmationCount
         }
     }
 `;

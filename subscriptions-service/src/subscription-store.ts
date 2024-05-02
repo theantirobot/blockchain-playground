@@ -8,6 +8,7 @@ const subscriptions: Subscription[] = [
 export interface SubscriptionInput {
     webhookUrl: string;
     address: string;
+    confirmationCount: number;
 }
 
 export default { 
@@ -35,6 +36,7 @@ export default {
         }
         subscription.webhookUrl = input.webhookUrl;
         subscription.address = input.address;
+        subscription.confirmationCount = input.confirmationCount;
         return subscription;
     },
     putSubscription: async (input: SubscriptionInput): Promise<Subscription> => {

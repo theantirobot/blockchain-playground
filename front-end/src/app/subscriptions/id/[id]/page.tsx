@@ -22,6 +22,7 @@ import { useSubscription } from '@/hooks/use-subscription';
 type Inputs = {
     address: string; // Corrected the typo here from 'ammount' to 'amount'
     webhookUrl: string;
+    confirmationCount: string;
 };
 
 const Subscription = () => {
@@ -47,7 +48,8 @@ const Subscription = () => {
         if (subscriptionData) {
             form.reset({
                 address: subscriptionData.address,
-                webhookUrl: subscriptionData.webhookUrl
+                webhookUrl: subscriptionData.webhookUrl,
+                confirmationCount: subscriptionData.confirmationCount
             });
         }
     }, [subscriptionData, form.reset]);
@@ -60,6 +62,7 @@ const Subscription = () => {
             input: {
               address: data.address,
               webhookUrl: data.webhookUrl,
+              confirmationCount: parseInt(data.confirmationCount)
             }
           },
           refetchQueries: [{ query: GET_SUBSCRIPTIONS, variables: { first: 10 }}, { query: GET_SUBSCRIPTION_DETAILS }],
@@ -98,6 +101,22 @@ const Subscription = () => {
                 </FormControl>
                 <FormDescription>
                   We'll notify this url when matching transaction is received
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmationCount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirmation Cuont</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="30" {...field} />
+                </FormControl>
+                <FormDescription>
+                  We'll invoke your webhook after after this many blocks have been confirmed.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
