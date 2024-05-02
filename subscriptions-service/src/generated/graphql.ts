@@ -76,9 +76,7 @@ export type SubscribeInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   address?: Maybe<Scalars['String']['output']>;
-  firstBlock?: Maybe<Block>;
   id: Scalars['ID']['output'];
-  isDeleted?: Maybe<Scalars['Boolean']['output']>;
   webhookUrl?: Maybe<Scalars['String']['output']>;
 };
 
@@ -225,9 +223,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   address?: SubscriptionResolver<Maybe<ResolversTypes['String']>, "address", ParentType, ContextType>;
-  firstBlock?: SubscriptionResolver<Maybe<ResolversTypes['Block']>, "firstBlock", ParentType, ContextType>;
   id?: SubscriptionResolver<ResolversTypes['ID'], "id", ParentType, ContextType>;
-  isDeleted?: SubscriptionResolver<Maybe<ResolversTypes['Boolean']>, "isDeleted", ParentType, ContextType>;
   webhookUrl?: SubscriptionResolver<Maybe<ResolversTypes['String']>, "webhookUrl", ParentType, ContextType>;
 };
 

@@ -16,10 +16,8 @@
 
   type Subscription @key(fields: "id") {
     id: ID!
-    firstBlock: Block
     webhookUrl: String
     address: String
-    isDeleted: Boolean
   }
 
   type SubscriptionConnection {
