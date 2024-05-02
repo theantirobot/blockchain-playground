@@ -4,6 +4,10 @@ This repo contains a UI application demonstrating the following:
 * An indexer that polls for blocks, finds matched subscriptions, and invokes their webhooks
 * A sample-client that receives the webhook.
 
+# Video Demo
+
+https://github.com/theantirobot/blockchain-playground/assets/2140031/460e8de6-4f57-44e9-8030-550516ee8725
+
 # How To Run The Demo
 1. Ensure [Docker](https://docs.docker.com/get-docker/) is installed.
 2. From the root of the project, issue:
