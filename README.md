@@ -1,4 +1,4 @@
-# Indexer Challenge
+# Blockchain Indexer Challenge
 This repo contains a UI application demonstrating the following:
 * Subscription service for defining what addresses to invoke a webhook for
 * An indexer that polls for blocks, finds matched subscriptions, and invokes their webhooks
