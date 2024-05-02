@@ -82,7 +82,6 @@ const SendEtherComponent = () => {
     { !account && web3Status !== "loading accounts" && <Button onClick={connectWallet}>Connect Wallet</Button> }
     { account && 
     <div className='border rounded-lg p-4 m-2 shadow'>
-    {sendState}
       <Form {...form} >
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
