@@ -1,19 +1,16 @@
 # docker-compose.yml
 version: '3.8'
 services:
-  ganache:
-    image: trufflesuite/ganache-cli
+  ethereum-node:
+    build: ./ethereum-node
     ports:
       - "8545:8545"
-    command: ganache-cli --host 0.0.0.0 --port 8545
-
   subscription-service:
     build: ./subscriptions-service
     volumes:
       - ./subscriptions-service:/app
     ports:
       - "4001:4001"
-
   gateway:
     build: ./gateway
     volumes:
@@ -27,8 +24,7 @@ services:
     volumes:
       - ./indexer:/app
     depends_on:
-      - ganache
-
+      - ethereum-node
   sample-app:
     build: ./sample-app
     volumes:
@@ -46,6 +42,6 @@ services:
       - NODE_ENV=development
     depends_on:
       - gateway
-      - ganache
+      - ethereum-node
       - sample-app
 

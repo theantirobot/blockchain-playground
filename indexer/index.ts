@@ -12,7 +12,7 @@ const subscriptions = new Subscriptions({
         cache: new InMemoryCache()
         })
 });
-const web3 = new Web3('http://ganache:8545');
+const web3 = new Web3('http://ethereum-node:8545');
 
 // Custom replacer function to handle BigInt values
 function bigIntReplacer(key: string, value: any): any {
