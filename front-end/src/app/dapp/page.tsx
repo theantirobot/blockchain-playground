@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { set } from 'zod';
 
 type Inputs = {
     amount: number; // Corrected the typo here from 'ammount' to 'amount'
@@ -24,6 +25,7 @@ const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
 
 const SendEtherComponent = () => {
   const [account, setAccount] = useState('');
+  const [sendState, setSendState] = useState<string>('not yet sent');
   const form = useForm<Inputs>();
   const [web3Status, setWeb3Status] = useState<string>("loading accounts");
   useEffect(() => {
@@ -57,15 +59,19 @@ const SendEtherComponent = () => {
 
   const onSubmit: SubmitHandler<Inputs> = data => {
     const amountToSend = web3.utils.toWei(data.amount.toString(), "ether"); // Convert the amount to wei
+    setSendState("sending");
+
     web3.eth.sendTransaction({
         from: account,
         to: data.recipient,
         value: amountToSend
     })
     .then(result => {
+      setSendState("success");
       console.log('Ether sent successfully:', result);
     })
     .catch(error => {
+      setSendState("error");
       console.error('Failed to send Ether:', error);
     });
   };
@@ -76,6 +82,7 @@ const SendEtherComponent = () => {
     { !account && web3Status !== "loading accounts" && <Button onClick={connectWallet}>Connect Wallet</Button> }
     { account && 
     <div className='border rounded-lg p-4 m-2 shadow'>
+    {sendState}
       <Form {...form} >
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField

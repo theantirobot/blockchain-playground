@@ -4,7 +4,7 @@ supporting indexer-as-aservice.
 
 ## Front End
 Next.js, Tailwind, Shadcn
-The front end has three routes, exercising each part of the architecture. Each route is embedded as an iframe in the root, to fascilitate easy demo.
+The front end has three routes that exercise the entire system. Each route is embedded as an iframe in the root to make for an effective demo.
 
 ### Subscriptions
 Subscription Management. This would be our portal, like the AWS console for our indexer-as-service.  It talks to the gateway, which fronts all of the microservices that will support the UI.  It only talks to the gateway.
@@ -62,6 +62,10 @@ For this demo, just use ganache.
                          └────────┘                              
 ```
 # To start
+```
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
+```
+
 run ganache for local blockchain support
 navigate to each of these subdirectory and run yarn start
 * subscription-service

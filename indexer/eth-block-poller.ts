@@ -25,6 +25,8 @@ export class EthereumBlockPoller {
         this.pollingInterval = setInterval(async () => {
             try {
                 const currentBlockNumber = await this.web3.eth.getBlockNumber();
+                console.log("Current block number = " + currentBlockNumber);
+
                 const blocksToProcess: bigint[] = [];
                 if (this.latestBlockNumber === null) {
                     console.log(`Initial block number: ${currentBlockNumber}`);
