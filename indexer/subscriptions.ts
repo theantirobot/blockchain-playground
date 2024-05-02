@@ -8,9 +8,6 @@ export const GET_SUBSCRIPTIONS = gql`
                 node {
                     id
                     address
-                    firstBlock {
-                        id
-                    }
                     webhookUrl
                 }
             }
