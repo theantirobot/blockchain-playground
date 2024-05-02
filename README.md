@@ -45,23 +45,16 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
                          └────────┘                              
 ```
 ## Front End
-Next.js, Tailwind, Shadcn
-The front end has three routes that exercise the entire system. Each route is embedded as an iframe in the root to make for an effective demo.
-
-### Subscriptions
-Subscription Management. This would be our portal, like the AWS console for our indexer-as-service.  It talks to the gateway, which fronts all of the microservices that will support the UI.  It only talks to the gateway.
-
-### Dapp
-This is a stand-in for a client's dapp that would submit transactions.
-
-### Feed
-This a stand-in for the client's administrative back-end that receives subscribed transactions. 
+The front exercises the entire system by:
+* Managing subscriptions
+* Submitting transactions
+* Showing feed of matched transactions
 
 ## Gateway
-This is a graphql federation service.  It stitches together schemas from multiple back-end services to support the front-end. As additional features are added, they can be encapsulated in microservices and added to the federator.  
+This is a graphql federation service.  It stitches together schemas from multiple back-end services to support the front-end. Subsequent work will include more services in the federation.
 
 ## Subscriptions
-This manages the subscription info provided by the user.  It would not, for example, store webhook callback history or DLQ. When that becomes supported, we'd add another microservice and add it to the federator.
+This manages the subscription info provided by the user.  
 
 ## Indexer
 Polls for new blocks, finds related subscriptions, and invokes their webhook.
@@ -77,9 +70,10 @@ This is the blockchain node API, using hardhat simulated ethereum.
 
 # TODO:
 * mitigate reorgs
- * add confirmation count to subscriptions
- * integrate counting confirmations into indexer
+  * add confirmation count to subscriptions
+  * integrate counting confirmations into indexer
 * be resilient against webhookUrl outages
- * decouple webhook invocation from subscription matching
- * add a webhook-invocation-service to manage each webhook invocation
- * show invocation data in the subscription front-end.
+  * decouple webhook invocation from subscription matching
+  * add a webhook-invocation-service to manage each webhook invocation
+  * show invocation data in the subscription front-end.
+* end-to-end tests
