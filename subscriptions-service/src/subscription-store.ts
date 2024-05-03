@@ -45,6 +45,7 @@ export default {
             id: (subscriptions.length + 1).toString(),
             webhookUrl: input.webhookUrl,
             address: input.address,
+            confirmationCount: input.confirmationCount
         };
         subscriptions.push(newSubscription);
         return newSubscription;

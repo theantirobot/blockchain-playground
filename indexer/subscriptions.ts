@@ -9,6 +9,7 @@ export const GET_SUBSCRIPTIONS = gql`
                     id
                     address
                     webhookUrl
+                    confirmationCount
                 }
             }
             pageInfo {

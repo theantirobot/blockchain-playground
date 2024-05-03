@@ -31,33 +31,34 @@ const poller = new EthereumBlockPoller({
             console.log(`No transactions in block ${block.number}`)
             return;
         }
-        const addresses = new Set<string>();
-        const transactions = []
-        for (let i = 0; i < block.transactions.length; i++) {
-            const tx = await web3.eth.getTransaction(block.transactions[i].toString());
-            addresses.add(tx.from);
-            addresses.add(tx.to!);
-
-            transactions.push(tx);
-        }
-        console.log(`Found ${addresses.size} unique addresses in block ${block.number}`)
-        const matchingSubs = await subscriptions.getSubscriptions(Array.from(addresses));
-        console.log("Matching subscriptions: " + JSON.stringify(matchingSubs, null, 2));
-        for (let i =0; i < transactions.length; i++) {
-            const tx = transactions[i];
-            console.log("Checking transaction: " + tx.hash + " from: " + tx.from + " to: " + tx.to)
-            const matchingSubsForTx = matchingSubs.filter((sub: any) => sub.address.toLowerCase() === tx.from.toLowerCase() || sub.address.toLowerCase() === tx.to?.toLowerCase());
-            for (let j = 0; j < matchingSubsForTx.length; j++) {
-                // Send webhook
-                const serializeableTransaction = JSON.stringify(tx, bigIntReplacer)
-                axios.post(matchingSubsForTx[j].webhookUrl, {
-                    transaction: JSON.parse(serializeableTransaction)
-                }).then(response => {
-                    console.log(`Webhook sent successfully: ${response.status}`);
-                }).catch(error => {
-                    console.error(`Error sending webhook: ${error.message}`);
-                });
-                console.log(`Sending webhook to ${matchingSubsForTx[j].webhookUrl} for transaction ${tx.hash}`);
+        const subs = await subscriptions.getSubscriptions();
+        for (let i = 0; i < subs.length; i++) {
+            console.log(`Subscription: ${subs[i].id} for address: ${subs[i].address}`);
+            const confirmedBlockNumber = BigInt(block.number) - BigInt(subs[i].confirmationCount);
+            if (confirmedBlockNumber < 1) {
+                continue;
+            }
+            const confirmedBlock = await web3.eth.getBlock(confirmedBlockNumber);
+            const transactions = []
+            for (let i = 0; i < confirmedBlock.transactions.length; i++) {
+                const tx = await web3.eth.getTransaction(confirmedBlock.transactions[i].toString());
+                transactions.push(tx);
+            }
+            for (let j = 0; j < transactions.length; j++) {
+                const tx = transactions[j];
+                if (subs[i].address.toLowerCase() === tx.from.toLowerCase() || subs[i].address.toLowerCase() === tx.to?.toLowerCase()) {
+                    // Send webhook
+                    const serializeableTransaction = JSON.stringify(tx, bigIntReplacer, 2)
+                    console.log(`Transaction: ${serializeableTransaction}`)
+                    axios.post(subs[i].webhookUrl, {
+                        transaction: JSON.parse(serializeableTransaction)
+                    }).then(response => {
+                        console.log(`Webhook sent successfully: ${response.status}`);
+                    }).catch(error => {
+                        console.error(`Error sending webhook: ${error.message}`);
+                    });
+                    console.log(`Sending webhook to ${subs[i].webhookUrl} for transaction ${tx.hash}`);
+                }
             }
         }
     }

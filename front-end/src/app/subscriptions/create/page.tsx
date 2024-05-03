@@ -21,7 +21,7 @@ import { useRouter, useParams } from 'next/navigation';
 type Inputs = {
     address: string; // Corrected the typo here from 'ammount' to 'amount'
     webhookUrl: string;
-    confirmationCount: number;
+    confirmationCount: string;
 };
 
 
@@ -32,7 +32,6 @@ const CreateSubscriptionComponent = () => {
     const router = useRouter();
 
     const onSubmit: SubmitHandler<Inputs> = data => {
-        console.log("Received data to submit" + JSON.stringify(data));
         subscribe({
           variables: {
             input: {
