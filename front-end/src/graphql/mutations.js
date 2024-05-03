@@ -6,6 +6,7 @@ export const SUBSCRIBE_MUTATION = gql`
       id
       webhookUrl
       address
+      confirmationCount
     }
   }
 `;
@@ -22,6 +23,7 @@ export const UPDATE_SUBSCRIPTION_MUTATION = gql`
             id
             webhookUrl
             address
+            confirmationCount
         }
     }
 `;

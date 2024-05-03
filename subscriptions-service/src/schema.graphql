@@ -12,12 +12,14 @@
   input SubscribeInput {
     address: String!
     webhookUrl: String!
+    confirmationCount: Int!
   }
 
   type Subscription @key(fields: "id") {
     id: ID!
     webhookUrl: String
     address: String
+    confirmationCount: Int
   }
 
   type SubscriptionConnection {

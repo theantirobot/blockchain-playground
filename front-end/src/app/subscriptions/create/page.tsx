@@ -21,6 +21,7 @@ import { useRouter, useParams } from 'next/navigation';
 type Inputs = {
     address: string; // Corrected the typo here from 'ammount' to 'amount'
     webhookUrl: string;
+    confirmationCount: string;
 };
 
 
@@ -31,12 +32,12 @@ const CreateSubscriptionComponent = () => {
     const router = useRouter();
 
     const onSubmit: SubmitHandler<Inputs> = data => {
-        console.log("Received data to submit" + JSON.stringify(data));
         subscribe({
           variables: {
             input: {
               address: data.address,
               webhookUrl: data.webhookUrl,
+              confirmationCount: parseInt(data.confirmationCount)
             }
           },
           onCompleted: ({subscribe: { id }}) => {
@@ -81,6 +82,22 @@ const CreateSubscriptionComponent = () => {
                 </FormControl>
                 <FormDescription>
                   We'll notify this url when matching transaction is received
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmationCount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirmation Cuont</FormLabel>
+                <FormControl>
+                  <Input placeholder="30" {...field} />
+                </FormControl>
+                <FormDescription>
+                  We'll invoke your webhook after after this many blocks have been confirmed.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

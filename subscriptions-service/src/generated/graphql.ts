@@ -70,12 +70,14 @@ export type QuerySubscriptionsArgs = {
 
 export type SubscribeInput = {
   address: Scalars['String']['input'];
+  confirmationCount: Scalars['Int']['input'];
   webhookUrl: Scalars['String']['input'];
 };
 
 export type Subscription = {
   __typename?: 'Subscription';
   address?: Maybe<Scalars['String']['output']>;
+  confirmationCount?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   webhookUrl?: Maybe<Scalars['String']['output']>;
 };
@@ -223,6 +225,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   address?: SubscriptionResolver<Maybe<ResolversTypes['String']>, "address", ParentType, ContextType>;
+  confirmationCount?: SubscriptionResolver<Maybe<ResolversTypes['Int']>, "confirmationCount", ParentType, ContextType>;
   id?: SubscriptionResolver<ResolversTypes['ID'], "id", ParentType, ContextType>;
   webhookUrl?: SubscriptionResolver<Maybe<ResolversTypes['String']>, "webhookUrl", ParentType, ContextType>;
 };
