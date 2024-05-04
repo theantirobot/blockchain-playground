@@ -85,136 +85,118 @@ const Subscription = () => {
   };
 
   return (
-    <div className="">
-      {!subscriptionError && (
-        <div className="flex flex-col gap-2">
-          <Form {...form}>
-            <form
-              className="border rounded-lg space-y-8 p-4"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="0xD5F46Ef9e3acdE9f4AAEBD37F37c4B2EC90D51F1"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      We'll notify you when a transaction is sent to or from
-                      this address.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="webhookUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Webhook Url</FormLabel>
-                    <FormControl>
-                      <Input placeholder="http://yourdomain.com" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      We'll notify this url when matching transaction is
-                      received
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmationCount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmation Cuont</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="30" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      We'll invoke your webhook after after this many blocks
-                      have been confirmed.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex flex-row gap-2">
-                <Button type="submit">Update</Button>
-                <Button type="button" onClick={() => unsubscribe()}>
-                  Delete
-                </Button>
-              </div>
-            </form>
-          </Form>
-          {subscriptionData && subscriptionData.webhookInvocationHistory && (
-            <pre>
-              {JSON.stringify(
-                subscriptionData.webhookInvocationHistory,
-                null,
-                2,
-              )}{" "}
-            </pre>
-          )}
-          {webhookInvocationHistory && (
-            <CallbackHistory
-              history={webhookInvocationHistory.edges.map(({ node }) => node)}
+    <div className=" flex flex-col gap-2 h-full">
+      { 
+        // update / delete form
+      }
+      <div className="border rounded-lg space-y-8 p-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="0xD5F46Ef9e3acdE9f4AAEBD37F37c4B2EC90D51F1"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    We'll notify you when a transaction is sent to or from this
+                    address.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          )}
+            <FormField
+              control={form.control}
+              name="webhookUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Webhook Url</FormLabel>
+                  <FormControl>
+                    <Input placeholder="http://yourdomain.com" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    We'll notify this url when matching transaction is received
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmationCount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmation Cuont</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="30" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    We'll invoke your webhook after after this many blocks have
+                    been confirmed.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-row gap-2">
+              <Button type="submit">Update</Button>
+              <Button type="button" onClick={() => unsubscribe()}>
+                Delete
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
+      {
+        // callback history
+      }
+      <div className="border rounded-lg flex flex-col gap-2 p-4 flex-1 overflow-hidden">
+        <h2 className="text-lg font-semibold mb-2 flex flex-col">Callback History</h2>
+
+        <div className="flex-1 overflow-auto flex flex-col gap-2">
+          {webhookInvocationHistory &&
+            webhookInvocationHistory.edges
+              .map(({ node }) => node)
+              .map((item, index) => CallbackHistoryItem(item, index))}
         </div>
-      )}
-      {subscriptionLoading && "Loading..."}
-      {subscriptionError && "Error: " + subscriptionError.message}
+      </div>
     </div>
   );
 };
 
 export default Subscription;
 
-const CallbackHistory = ({ history }: { history: any[] }) => {
+const CallbackHistoryItem = (item, index) => {
+  const { webhookInvocation } = item;
   return (
-    <div className="border rounded-lg p-4 flex-1">
-      <h2 className="text-lg font-semibold mb-4">Callback History</h2>
-      <div className="space-y-4 overflow-scroll">
-        {history.map((item, index) => {
-          const { webhookInvocation } = item;
-          return (
-            <div
-              key={index}
-              className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4"
-            >
-              <div>
-                <p className="font-semibold">
-                  {new Date(
-                    parseInt(webhookInvocation.startTimestamp),
-                  ).toLocaleDateString()}{" "}
-                  {new Date(
-                    parseInt(webhookInvocation.startTimestamp),
-                  ).toLocaleTimeString()}{" "}
-                </p>
-              </div>
-              <div className="mt-2 md:mt-0">
-                <p className="text-sm text-gray-600">
-                  {webhookInvocation?.success ? "Success" : "Failed"}
-                </p>
-                <p className="text-sm text-gray-600">
-                  Duration:{" "}
-                  {parseInt(webhookInvocation.endTimestamp) -
-                    parseInt(webhookInvocation.startTimestamp)}
-                  ms
-                </p>
-              </div>
-            </div>
-          );
-        })}
+    <div key={index} className="flex flex-row gap-2">
+      <div>
+        <p className="font-semibold">
+          {new Date(
+            parseInt(webhookInvocation.startTimestamp),
+          ).toLocaleDateString()}{" "}
+          {new Date(
+            parseInt(webhookInvocation.startTimestamp),
+          ).toLocaleTimeString()}{" "}
+        </p>
+      </div>
+      <div className="mt-2 md:mt-0">
+        <p className="text-sm text-gray-600">
+          {webhookInvocation?.success ? "Success" : "Failed"}
+        </p>
+        <p className="text-sm text-gray-600">
+          Duration:{" "}
+          {parseInt(webhookInvocation.endTimestamp) -
+            parseInt(webhookInvocation.startTimestamp)}
+          ms
+        </p>
       </div>
     </div>
   );
