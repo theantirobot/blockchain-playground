@@ -38,7 +38,7 @@ const SubscriptionsLayout = ({ children }) => {
 
             </div>
         </div>
-        <div className="border rounded-lg flex-1 p-2">
+        <div className="flex-1 p-2">
            { children }
         </div>
     </div>

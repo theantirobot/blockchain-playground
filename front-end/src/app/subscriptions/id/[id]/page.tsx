@@ -42,7 +42,7 @@ const Subscription = () => {
     // Hook to execute the mutation
     const [updateSubscription, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_SUBSCRIPTION_MUTATION)
         
-    const { subscriptionLoading, subscriptionError, subscriptionData } = useSubscription(id as string);
+    const { subscriptionLoading, subscriptionError, subscriptionData, webhookInvocationHistory } = useSubscription(id as string);
 
     useEffect(() => {
         if (subscriptionData) {
@@ -73,11 +73,10 @@ const Subscription = () => {
   return (
     <div className=''>
       { !subscriptionError && (
-      <>
-      { subscriptionData?.webhookInvocationHistory && <pre>{JSON.stringify(subscriptionData.webhookInvocationHistory, null, 2)}</pre> }
+      <div className="flex flex-col gap-2">
       <Form {...form} >
         
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form className="border rounded-lg space-y-8 p-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="address"
@@ -136,7 +135,9 @@ const Subscription = () => {
       { subscriptionData && subscriptionData.webhookInvocationHistory && 
          <pre>{JSON.stringify(subscriptionData.webhookInvocationHistory, null, 2)} </pre>
       }
-      </>)}
+                {webhookInvocationHistory && <CallbackHistory history={webhookInvocationHistory.edges.map(({node}) => node)} />}
+
+      </div>)}
       { subscriptionLoading && "Loading..."}
       { subscriptionError && "Error: " + subscriptionError.message}
     </div>
@@ -144,4 +145,30 @@ const Subscription = () => {
 };
 
 export default Subscription;
+
+
+
+const CallbackHistory = ({ history }: { history: any[]} ) => {
+  return (
+    <div className="border rounded-lg p-4">
+      <h2 className="text-lg font-semibold mb-4">Callback History</h2>
+      <div className="space-y-4">
+
+        {history.map((item, index) => {
+          const { webhookInvocation } = item;
+          return (
+          <div key={index} className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+            <div>
+              <p className="font-semibold">{new Date(parseInt(webhookInvocation.startTimestamp)).toLocaleDateString()} {new Date(parseInt(webhookInvocation.startTimestamp)).toLocaleTimeString()} </p>
+            </div>
+            <div className="mt-2 md:mt-0">
+              <p className="text-sm text-gray-600">{webhookInvocation?.success ? "Success" : "Failed"}</p>
+              <p className="text-sm text-gray-600">Duration: {parseInt(webhookInvocation.endTimestamp) - parseInt(webhookInvocation.startTimestamp)}ms</p>
+            </div>
+          </div>
+        )})}
+      </div>
+    </div>
+  );
+};
 

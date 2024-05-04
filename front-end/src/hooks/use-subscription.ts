@@ -7,5 +7,5 @@ export const useSubscription = (id: string) => {
             id
         },
     });
-    return { subscriptionLoading, subscriptionError, subscriptionData: data?.subscription || undefined}
+    return { subscriptionLoading, subscriptionError, subscriptionData: data?.subscription || undefined, webhookInvocationHistory: data?.webhookInvocationHistory }
 }
