@@ -187,7 +187,7 @@ const CallbackHistoryItem = (item, index) => {
           ).toLocaleTimeString()}{" "}
         </p>
       </div>
-      <div className="mt-2 md:mt-0">
+      <div >
         <p className="text-sm text-gray-600">
           {webhookInvocation?.success ? "Success" : "Failed"}
         </p>
