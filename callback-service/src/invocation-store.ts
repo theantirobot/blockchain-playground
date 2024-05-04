@@ -35,7 +35,7 @@ export default {
             instructions,
         };
         const newHistory = await executeHistory(newWebhookInvocationHistory);
-        invocationHistory.push(newHistory);
+        invocationHistory.unshift(newHistory);
         return newWebhookInvocationHistory;
     }
 }
