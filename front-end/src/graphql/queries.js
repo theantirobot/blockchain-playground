@@ -28,5 +28,27 @@ export const GET_SUBSCRIPTION_DETAILS = gql`
             webhookUrl
             confirmationCount
         }
+        webhookInvocationHistory(subscriptionId: $id) {
+                edges {
+                    cursor
+                    node {
+                        id
+                        subscriptionId
+                        instructions {
+                            url
+                            payload
+                        }
+                        webhookInvocation {
+                            success
+                            startTimestamp
+                            endTimestamp
+                        }
+                    }
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                }
+            }
     }
 `;

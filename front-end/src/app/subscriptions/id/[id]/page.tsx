@@ -72,7 +72,11 @@ const Subscription = () => {
 
   return (
     <div className=''>
-      { !subscriptionError && (<Form {...form} >
+      { !subscriptionError && (
+      <>
+      { subscriptionData?.webhookInvocationHistory && <pre>{JSON.stringify(subscriptionData.webhookInvocationHistory, null, 2)}</pre> }
+      <Form {...form} >
+        
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
@@ -128,7 +132,11 @@ const Subscription = () => {
 
           </div>
         </form>
-      </Form>)}
+      </Form>
+      { subscriptionData && subscriptionData.webhookInvocationHistory && 
+         <pre>{JSON.stringify(subscriptionData.webhookInvocationHistory, null, 2)} </pre>
+      }
+      </>)}
       { subscriptionLoading && "Loading..."}
       { subscriptionError && "Error: " + subscriptionError.message}
     </div>

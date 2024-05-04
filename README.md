@@ -73,11 +73,9 @@ This is the blockchain node API, using hardhat simulated ethereum.
 
 
 # TODO:
-* mitigate reorgs
-  * add confirmation count to subscriptions
-  * integrate counting confirmations into indexer
 * be resilient against webhookUrl outages
   * decouple webhook invocation from subscription matching
   * add a webhook-invocation-service to manage each webhook invocation
   * show invocation data in the subscription front-end.
 * end-to-end tests
+* subscription audit log

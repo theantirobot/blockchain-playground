@@ -1,8 +1,7 @@
 import Web3 from "web3";
 import { EthereumBlockPoller } from "./eth-block-poller";
 import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client/core';
-import { Subscriptions } from "./subscriptions"
-import axios from 'axios';
+import { Subscriptions } from "./subscriptions";
 
 const subscriptions = new Subscriptions({
     client: new ApolloClient({
@@ -22,6 +21,21 @@ function bigIntReplacer(key: string, value: any): any {
     }
     return value;
 }
+
+const CALLBACK_MUTATION = gql`
+    mutation Callback($subscriptionId: ID!, $instructions: CallbackInstructionsInput!) {
+        callback(subscriptionId: $subscriptionId, instructions: $instructions) {
+            id
+        }
+    }
+`;
+
+const callbackClient = new ApolloClient({
+    link: new HttpLink({
+        uri: 'http://callback-service:4002', // Replace with your callback service GraphQL server URL
+    }),
+    cache: new InMemoryCache()
+});
 
 const poller = new EthereumBlockPoller({
     web3,
@@ -47,21 +61,29 @@ const poller = new EthereumBlockPoller({
             for (let j = 0; j < transactions.length; j++) {
                 const tx = transactions[j];
                 if (subs[i].address.toLowerCase() === tx.from.toLowerCase() || subs[i].address.toLowerCase() === tx.to?.toLowerCase()) {
-                    // Send webhook
-                    const serializeableTransaction = JSON.stringify(tx, bigIntReplacer, 2)
-                    console.log(`Transaction: ${serializeableTransaction}`)
-                    axios.post(subs[i].webhookUrl, {
-                        transaction: JSON.parse(serializeableTransaction)
-                    }).then(response => {
-                        console.log(`Webhook sent successfully: ${response.status}`);
-                    }).catch(error => {
-                        console.error(`Error sending webhook: ${error.message}`);
-                    });
-                    console.log(`Sending webhook to ${subs[i].webhookUrl} for transaction ${tx.hash}`);
+                    // Call callback mutation
+                    const serializedTransaction = JSON.stringify({ transaction: tx } , bigIntReplacer, 2);
+                    console.log(`Transaction: ${serializedTransaction}`);
+                    try {
+                        await callbackClient.mutate({
+                            mutation: CALLBACK_MUTATION,
+                            variables: {
+                                subscriptionId: subs[i].id,
+                                instructions: {
+                                    url: subs[i].webhookUrl,
+                                    payload: serializedTransaction
+                                }
+                            }
+                        });
+                        console.log(`Callback mutation called successfully for transaction ${tx.hash}`);
+                    } catch (error: any) {
+                        console.error(`Error calling callback mutation: ${error.message}`);
+                        console.log(JSON.stringify(error, null, 2));
+                    }
                 }
             }
         }
     }
-})
+});
 
 poller.startPolling(1000);
