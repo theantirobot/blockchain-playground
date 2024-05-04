@@ -150,9 +150,9 @@ export default Subscription;
 
 const CallbackHistory = ({ history }: { history: any[]} ) => {
   return (
-    <div className="border rounded-lg p-4">
+    <div className="border rounded-lg p-4 flex-1">
       <h2 className="text-lg font-semibold mb-4">Callback History</h2>
-      <div className="space-y-4">
+      <div className="space-y-4 overflow-scroll">
 
         {history.map((item, index) => {
           const { webhookInvocation } = item;
