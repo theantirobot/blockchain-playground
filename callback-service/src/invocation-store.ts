@@ -34,8 +34,8 @@ export default {
             subscriptionId,
             instructions,
         };
-        invocationHistory.push(newWebhookInvocationHistory);
-        await executeHistory(newWebhookInvocationHistory);
+        const newHistory = await executeHistory(newWebhookInvocationHistory);
+        invocationHistory.push(newHistory);
         return newWebhookInvocationHistory;
     }
 }
