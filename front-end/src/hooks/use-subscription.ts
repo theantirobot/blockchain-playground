@@ -6,6 +6,7 @@ export const useSubscription = (id: string) => {
         variables: {
             id
         },
+        pollInterval: 5000
     });
     return { subscriptionLoading, subscriptionError, subscriptionData: data?.subscription || undefined, webhookInvocationHistory: data?.webhookInvocationHistory }
 }
