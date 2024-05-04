@@ -11,6 +11,12 @@ services:
       - ./subscriptions-service:/app
     ports:
       - "4001:4001"
+  callback-service:
+    build: ./callback-service
+    volumes:
+      - ./callback-service:/app
+    ports:
+      - "4002:4002"
   gateway:
     build: ./gateway
     volumes:

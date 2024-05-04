@@ -1,0 +1,57 @@
+extend type Subscription @key(fields: "id") {
+  id: ID! @external
+  webhookInvocationHistory(first: Int, after: String): WebhookInvocationHistoryConnection!
+}
+
+type WebhookInvocationHistoryConnection {
+  edges: [WebhookInvocationHistoryEdge]!
+  pageInfo: PageInfo!
+}
+
+type WebhookInvocationHistoryEdge {
+  cursor: String!
+  node: WebhookInvocationHistory!
+}
+
+type WebhookInvocationHistory {
+  id: ID!
+  subscriptionId: ID!
+  instructions: CallbackInstructions!
+  # not set initially, then set after callback.
+  webhookInvocation: WebhookInvocation
+}
+
+type Transaction {
+  id: ID!
+  payload: String!
+  timestamp: String!
+}
+
+type WebhookInvocation {
+  success: Boolean!
+  startTimestamp: String!
+  endTimestamp: String!
+}
+
+input CallbackInstructionsInput {
+  url: String!
+  payload: String!
+}
+
+type CallbackInstructions {
+  url: String!
+  payload: String!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+}
+
+type Query {
+  webhookInvocationHistory(subscriptionId: ID!, first: Int, after: String): WebhookInvocationHistoryConnection!
+}
+
+type Mutation {
+  callback(subscriptionId: ID!, instructions: CallbackInstructionsInput!): WebhookInvocationHistory!
+}
