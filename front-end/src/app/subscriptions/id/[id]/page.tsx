@@ -178,7 +178,7 @@ const CallbackHistoryItem = (item, index) => {
   return (
     <div key={index} className="flex flex-row gap-2">
       <div>
-        <p className="font-semibold">
+        <p className="text-sm">
           {new Date(
             parseInt(webhookInvocation.startTimestamp),
           ).toLocaleDateString()}{" "}

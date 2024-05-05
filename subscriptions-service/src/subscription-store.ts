@@ -1,53 +1,59 @@
-import { Subscription, SubscriptionFilter } from "./generated/graphql";
+import { nanoid } from "nanoid";
+import { SubscribeInput, SubscriptionFilter } from "./generated/graphql";
 
-const subscriptions: Subscription[] = [
-    // { id: "1", webhookUrl: "www.sqs.com", address: "0x123"},
-    // { id: "2", webhookUrl: "www.sqs.com", address: "0x123"},
-];
+const subscriptions: { [id: string]: Subscription }= {}
 
-export interface SubscriptionInput {
+const subscriptionRevisions: { [id: string]: SubscriptionRevision[] } = {};
+
+export type Subscription = {
+    id: string;
     webhookUrl: string;
     address: string;
     confirmationCount: number;
 }
 
+export type SubscriptionRevision = {
+    id: string;
+    subscription: Subscription;
+}
+
 export default { 
-    getSubsriptions: async (filter?: SubscriptionFilter | undefined | null) => {
-        if (filter?.addresses && filter.addresses.length > 0) {
-            return subscriptions.filter(sub => filter!.addresses!.includes(sub.address!));
-        }
-        return [...subscriptions]
+    getSubscriptions: async (filter?: SubscriptionFilter | undefined | null) => {
+        const filteredSubscriptions = filter?.addresses?.map(id => subscriptions[id!]).filter(e => !!e) || Object.values(subscriptions)
+        return filteredSubscriptions.map(subscription => ({ ...subscription, revisions: subscriptionRevisions[subscription.id] }));
     },
+    getSubscriptionRevisions: async (id: string) => subscriptionRevisions[id] || [],
+
     getSubscription: async (id: string) => {
-        return subscriptions.find(sub => sub.id === id);
+        return { ...subscriptions[id], revisions: subscriptionRevisions[id] };
     },
     deleteSubscription: async (id: string) => {
-        const index = subscriptions.findIndex(sub => sub.id === id);
-        if (index !== -1) {
-            subscriptions.splice(index, 1);
-            return true;
+        try {
+            return !!subscriptions[id];
         }
-        return false;
+        finally {
+            delete subscriptions[id];
+        }
     },
-    updateSubscription: async (id: string, input: SubscriptionInput) => {
-        const subscription = subscriptions.find(sub => sub.id === id);
+    updateSubscription: async (id: string, input: SubscribeInput) => {
+        const subscription = subscriptions[id];
         if (!subscription) {
             throw new Error("Subscription not found");
         }
-        subscription.webhookUrl = input.webhookUrl;
-        subscription.address = input.address;
-        subscription.confirmationCount = input.confirmationCount;
+        subscriptions[id] = { id, ...input };
+        subscriptionRevisions[id].unshift({ id: nanoid(),  subscription });
         return subscription;
     },
-    putSubscription: async (input: SubscriptionInput): Promise<Subscription> => {
+    putSubscription: async (input: SubscribeInput): Promise<Subscription> => {
         console.log("Creating new subscription");
         const newSubscription:Subscription = {
-            id: (subscriptions.length + 1).toString(),
+            id: (Object.values(subscriptions).length + 1).toString(),
             webhookUrl: input.webhookUrl,
             address: input.address,
             confirmationCount: input.confirmationCount
         };
-        subscriptions.push(newSubscription);
+        subscriptions[newSubscription.id] = newSubscription;
+        subscriptionRevisions[newSubscription.id] = [{ id: nanoid(), subscription: newSubscription }];
         return newSubscription;
     }
 }

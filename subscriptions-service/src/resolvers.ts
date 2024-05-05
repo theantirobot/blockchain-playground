@@ -1,4 +1,7 @@
-import { Resolvers, Subscription, SubscriptionConnection } from "./generated/graphql";
+import { MyContext } from "./context";
+import { Resolvers, Subscription, SubscriptionConnection, SubscriptionRevisionConnection, SubscriptionRevisionsArgs } from "./generated/graphql";
+import { summarizeChanges } from "./revision-annotator";
+import { cleanUpRevisions } from "./revision-janitor";
 import SubscriptionStore from "./subscription-store";
 
 const arrayToConnection = (array: any[]) => {
@@ -13,14 +16,14 @@ export const resolvers: Resolvers = {
     Query: {
         subscriptions: async (_: any, { filter }): Promise<SubscriptionConnection> => {
             console.log("Subscriptions");
-            return arrayToConnection(await SubscriptionStore.getSubsriptions(filter)) as SubscriptionConnection;
+            return arrayToConnection(await SubscriptionStore.getSubscriptions(filter)) as SubscriptionConnection;
         },
-        subscription: async (_: any, { id }: any): Promise<Subscription> => {
+        subscription: async (_: any, { id }: any) => {
             console.log("Subscription");
             const subscription = await SubscriptionStore.getSubscription(id);
             if (!subscription) {
                 throw new Error("Subscription not found");
-            }
+            }            
             return subscription;
         }
     },
@@ -39,4 +42,13 @@ export const resolvers: Resolvers = {
             return SubscriptionStore.deleteSubscription(id);
         }
     },
+    Subscription: {
+        revisions: async (parent: Subscription, params: SubscriptionRevisionsArgs): Promise<SubscriptionRevisionConnection> => {
+            console.log("Subscription revisions");
+            const subRevisions = await SubscriptionStore.getSubscriptionRevisions("abc");
+            const prunedRevisions = cleanUpRevisions(subRevisions);
+            const annotatedRevisions = summarizeChanges(prunedRevisions);
+            return arrayToConnection(annotatedRevisions) as SubscriptionRevisionConnection;
+        }
+    }
 }

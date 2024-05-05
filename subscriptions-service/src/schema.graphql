@@ -20,6 +20,7 @@
     webhookUrl: String
     address: String
     confirmationCount: Int
+    revisions(first: Int, after: String): SubscriptionRevisionConnection
   }
 
   type SubscriptionConnection {
@@ -44,3 +45,19 @@
   input SubscriptionFilter {
     addresses: [String]
  }
+
+  type SubscriptionRevisionConnection {
+    edges: [SubscriptionRevisionEdge]
+    pageInfo: PageInfo
+  }
+
+  type SubscriptionRevisionEdge {
+    node: SubscriptionRevision
+    cursor: String!
+  }
+
+  type SubscriptionRevision {
+    id: ID!
+    changeSummary: String!
+    subscription: Subscription!
+  }
