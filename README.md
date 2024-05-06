@@ -7,6 +7,7 @@ This repo contains a UI application demonstrating the following:
 # Video Demo
 
 TODO: Demo new subscription history service
+
 https://github.com/theantirobot/blockchain-playground/assets/2140031/460e8de6-4f57-44e9-8030-550516ee8725
 
 # How To Run The Demo
