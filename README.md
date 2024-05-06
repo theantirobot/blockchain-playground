@@ -6,8 +6,7 @@ This repo contains a UI application demonstrating the following:
 
 # Video Demo
 
-TODO: Demo new subscription history service
-https://github.com/theantirobot/blockchain-playground/assets/2140031/460e8de6-4f57-44e9-8030-550516ee8725
+https://github.com/theantirobot/blockchain-playground/assets/2140031/9c58b43d-3a5a-4a30-8c16-9e97357c9b47
 
 # How To Run The Demo
 1. Ensure [Docker](https://docs.docker.com/get-docker/) is installed.
@@ -87,6 +86,6 @@ a feed to the front end.
 This is the blockchain node API, using hardhat simulated ethereum.
 
 
-# TODO:
-* end-to-end tests
-* subscription audit log
+# Older Demos
+
+https://github.com/theantirobot/blockchain-playground/assets/2140031/460e8de6-4f57-44e9-8030-550516ee8725
