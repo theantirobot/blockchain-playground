@@ -14,7 +14,6 @@ export const resolvers: Resolvers = {
         webhookInvocationHistory: async (_: any, { subscriptionId, first, after }): Promise<WebhookInvocationHistoryConnection> => {
             console.log("Fetching webhook history");
             const result = await InvocationStore.getWebhookInvocationHistory(subscriptionId);
-            console.log(JSON.stringify(result));
             return arrayToConnection(result) as WebhookInvocationHistoryConnection;
         }
     },
