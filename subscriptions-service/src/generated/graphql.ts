@@ -16,56 +16,6 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type AddressSubscription = {
-  __typename?: 'AddressSubscription';
-  address?: Maybe<Scalars['String']['output']>;
-  confirmationCount?: Maybe<Scalars['Int']['output']>;
-  id: Scalars['ID']['output'];
-  revisions?: Maybe<AddressSubscriptionRevisionConnection>;
-  webhookUrl?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type AddressSubscriptionRevisionsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type AddressSubscriptionConnection = {
-  __typename?: 'AddressSubscriptionConnection';
-  edges?: Maybe<Array<Maybe<AddressSubscriptionEdge>>>;
-  pageInfo?: Maybe<PageInfo>;
-};
-
-export type AddressSubscriptionEdge = {
-  __typename?: 'AddressSubscriptionEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<AddressSubscription>;
-};
-
-export type AddressSubscriptionFilter = {
-  addresses?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type AddressSubscriptionRevision = {
-  __typename?: 'AddressSubscriptionRevision';
-  changeSummary: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  subscription: AddressSubscription;
-};
-
-export type AddressSubscriptionRevisionConnection = {
-  __typename?: 'AddressSubscriptionRevisionConnection';
-  edges?: Maybe<Array<Maybe<AddressSubscriptionRevisionEdge>>>;
-  pageInfo?: Maybe<PageInfo>;
-};
-
-export type AddressSubscriptionRevisionEdge = {
-  __typename?: 'AddressSubscriptionRevisionEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<AddressSubscriptionRevision>;
-};
-
 export type Block = {
   __typename?: 'Block';
   id: Scalars['ID']['output'];
@@ -73,9 +23,9 @@ export type Block = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  subscribe?: Maybe<AddressSubscription>;
+  subscribe?: Maybe<Sub>;
   unsubscribe?: Maybe<Scalars['Boolean']['output']>;
-  updateAddressSubscription?: Maybe<AddressSubscription>;
+  updateSubscription?: Maybe<Sub>;
 };
 
 
@@ -89,7 +39,7 @@ export type MutationUnsubscribeArgs = {
 };
 
 
-export type MutationUpdateAddressSubscriptionArgs = {
+export type MutationUpdateSubscriptionArgs = {
   id: Scalars['ID']['input'];
   input: SubscribeInput;
 };
@@ -102,8 +52,8 @@ export type PageInfo = {
 
 export type Query = {
   __typename?: 'Query';
-  subscription?: Maybe<AddressSubscription>;
-  subscriptions?: Maybe<AddressSubscriptionConnection>;
+  subscription?: Maybe<Sub>;
+  subscriptions?: Maybe<SubscriptionConnection>;
 };
 
 
@@ -114,7 +64,22 @@ export type QuerySubscriptionArgs = {
 
 export type QuerySubscriptionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<AddressSubscriptionFilter>;
+  filter?: InputMaybe<SubscriptionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Sub = {
+  __typename?: 'Sub';
+  address?: Maybe<Scalars['String']['output']>;
+  confirmationCount?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['ID']['output'];
+  revisions?: Maybe<SubscriptionRevisionConnection>;
+  webhookUrl?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type SubRevisionsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -122,6 +87,42 @@ export type SubscribeInput = {
   address: Scalars['String']['input'];
   confirmationCount: Scalars['Int']['input'];
   webhookUrl: Scalars['String']['input'];
+};
+
+export type SubscriptionConnection = {
+  __typename?: 'SubscriptionConnection';
+  edges?: Maybe<Array<Maybe<SubscriptionEdge>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type SubscriptionEdge = {
+  __typename?: 'SubscriptionEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Sub>;
+};
+
+export type SubscriptionFilter = {
+  addresses?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type SubscriptionRevision = {
+  __typename?: 'SubscriptionRevision';
+  changeSummary: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  subscription: Sub;
+  timestamp: Scalars['String']['output'];
+};
+
+export type SubscriptionRevisionConnection = {
+  __typename?: 'SubscriptionRevisionConnection';
+  edges?: Maybe<Array<Maybe<SubscriptionRevisionEdge>>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type SubscriptionRevisionEdge = {
+  __typename?: 'SubscriptionRevisionEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<SubscriptionRevision>;
 };
 
 
@@ -195,13 +196,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  AddressSubscription: ResolverTypeWrapper<AddressSubscription>;
-  AddressSubscriptionConnection: ResolverTypeWrapper<AddressSubscriptionConnection>;
-  AddressSubscriptionEdge: ResolverTypeWrapper<AddressSubscriptionEdge>;
-  AddressSubscriptionFilter: AddressSubscriptionFilter;
-  AddressSubscriptionRevision: ResolverTypeWrapper<AddressSubscriptionRevision>;
-  AddressSubscriptionRevisionConnection: ResolverTypeWrapper<AddressSubscriptionRevisionConnection>;
-  AddressSubscriptionRevisionEdge: ResolverTypeWrapper<AddressSubscriptionRevisionEdge>;
   Block: ResolverTypeWrapper<Block>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -210,18 +204,18 @@ export type ResolversTypes = {
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Sub: ResolverTypeWrapper<Sub>;
   SubscribeInput: SubscribeInput;
+  SubscriptionConnection: ResolverTypeWrapper<SubscriptionConnection>;
+  SubscriptionEdge: ResolverTypeWrapper<SubscriptionEdge>;
+  SubscriptionFilter: SubscriptionFilter;
+  SubscriptionRevision: ResolverTypeWrapper<SubscriptionRevision>;
+  SubscriptionRevisionConnection: ResolverTypeWrapper<SubscriptionRevisionConnection>;
+  SubscriptionRevisionEdge: ResolverTypeWrapper<SubscriptionRevisionEdge>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  AddressSubscription: AddressSubscription;
-  AddressSubscriptionConnection: AddressSubscriptionConnection;
-  AddressSubscriptionEdge: AddressSubscriptionEdge;
-  AddressSubscriptionFilter: AddressSubscriptionFilter;
-  AddressSubscriptionRevision: AddressSubscriptionRevision;
-  AddressSubscriptionRevisionConnection: AddressSubscriptionRevisionConnection;
-  AddressSubscriptionRevisionEdge: AddressSubscriptionRevisionEdge;
   Block: Block;
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
@@ -230,47 +224,14 @@ export type ResolversParentTypes = {
   PageInfo: PageInfo;
   Query: {};
   String: Scalars['String']['output'];
+  Sub: Sub;
   SubscribeInput: SubscribeInput;
-};
-
-export type AddressSubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressSubscription'] = ResolversParentTypes['AddressSubscription']> = {
-  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  confirmationCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  revisions?: Resolver<Maybe<ResolversTypes['AddressSubscriptionRevisionConnection']>, ParentType, ContextType, Partial<AddressSubscriptionRevisionsArgs>>;
-  webhookUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AddressSubscriptionConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressSubscriptionConnection'] = ResolversParentTypes['AddressSubscriptionConnection']> = {
-  edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['AddressSubscriptionEdge']>>>, ParentType, ContextType>;
-  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AddressSubscriptionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressSubscriptionEdge'] = ResolversParentTypes['AddressSubscriptionEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['AddressSubscription']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AddressSubscriptionRevisionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressSubscriptionRevision'] = ResolversParentTypes['AddressSubscriptionRevision']> = {
-  changeSummary?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  subscription?: Resolver<ResolversTypes['AddressSubscription'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AddressSubscriptionRevisionConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressSubscriptionRevisionConnection'] = ResolversParentTypes['AddressSubscriptionRevisionConnection']> = {
-  edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['AddressSubscriptionRevisionEdge']>>>, ParentType, ContextType>;
-  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AddressSubscriptionRevisionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AddressSubscriptionRevisionEdge'] = ResolversParentTypes['AddressSubscriptionRevisionEdge']> = {
-  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['AddressSubscriptionRevision']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  SubscriptionConnection: SubscriptionConnection;
+  SubscriptionEdge: SubscriptionEdge;
+  SubscriptionFilter: SubscriptionFilter;
+  SubscriptionRevision: SubscriptionRevision;
+  SubscriptionRevisionConnection: SubscriptionRevisionConnection;
+  SubscriptionRevisionEdge: SubscriptionRevisionEdge;
 };
 
 export type BlockResolvers<ContextType = any, ParentType extends ResolversParentTypes['Block'] = ResolversParentTypes['Block']> = {
@@ -279,9 +240,9 @@ export type BlockResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  subscribe?: Resolver<Maybe<ResolversTypes['AddressSubscription']>, ParentType, ContextType, RequireFields<MutationSubscribeArgs, 'input'>>;
+  subscribe?: Resolver<Maybe<ResolversTypes['Sub']>, ParentType, ContextType, RequireFields<MutationSubscribeArgs, 'input'>>;
   unsubscribe?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationUnsubscribeArgs, 'id'>>;
-  updateAddressSubscription?: Resolver<Maybe<ResolversTypes['AddressSubscription']>, ParentType, ContextType, RequireFields<MutationUpdateAddressSubscriptionArgs, 'id' | 'input'>>;
+  updateSubscription?: Resolver<Maybe<ResolversTypes['Sub']>, ParentType, ContextType, RequireFields<MutationUpdateSubscriptionArgs, 'id' | 'input'>>;
 };
 
 export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
@@ -291,20 +252,61 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  subscription?: Resolver<Maybe<ResolversTypes['AddressSubscription']>, ParentType, ContextType, RequireFields<QuerySubscriptionArgs, 'id'>>;
-  subscriptions?: Resolver<Maybe<ResolversTypes['AddressSubscriptionConnection']>, ParentType, ContextType, Partial<QuerySubscriptionsArgs>>;
+  subscription?: Resolver<Maybe<ResolversTypes['Sub']>, ParentType, ContextType, RequireFields<QuerySubscriptionArgs, 'id'>>;
+  subscriptions?: Resolver<Maybe<ResolversTypes['SubscriptionConnection']>, ParentType, ContextType, Partial<QuerySubscriptionsArgs>>;
+};
+
+export type SubResolvers<ContextType = any, ParentType extends ResolversParentTypes['Sub'] = ResolversParentTypes['Sub']> = {
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  confirmationCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  revisions?: Resolver<Maybe<ResolversTypes['SubscriptionRevisionConnection']>, ParentType, ContextType, Partial<SubRevisionsArgs>>;
+  webhookUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubscriptionConnection'] = ResolversParentTypes['SubscriptionConnection']> = {
+  edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['SubscriptionEdge']>>>, ParentType, ContextType>;
+  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubscriptionEdge'] = ResolversParentTypes['SubscriptionEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['Sub']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionRevisionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubscriptionRevision'] = ResolversParentTypes['SubscriptionRevision']> = {
+  changeSummary?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  subscription?: Resolver<ResolversTypes['Sub'], ParentType, ContextType>;
+  timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionRevisionConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubscriptionRevisionConnection'] = ResolversParentTypes['SubscriptionRevisionConnection']> = {
+  edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['SubscriptionRevisionEdge']>>>, ParentType, ContextType>;
+  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionRevisionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubscriptionRevisionEdge'] = ResolversParentTypes['SubscriptionRevisionEdge']> = {
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['SubscriptionRevision']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
-  AddressSubscription?: AddressSubscriptionResolvers<ContextType>;
-  AddressSubscriptionConnection?: AddressSubscriptionConnectionResolvers<ContextType>;
-  AddressSubscriptionEdge?: AddressSubscriptionEdgeResolvers<ContextType>;
-  AddressSubscriptionRevision?: AddressSubscriptionRevisionResolvers<ContextType>;
-  AddressSubscriptionRevisionConnection?: AddressSubscriptionRevisionConnectionResolvers<ContextType>;
-  AddressSubscriptionRevisionEdge?: AddressSubscriptionRevisionEdgeResolvers<ContextType>;
   Block?: BlockResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Sub?: SubResolvers<ContextType>;
+  SubscriptionConnection?: SubscriptionConnectionResolvers<ContextType>;
+  SubscriptionEdge?: SubscriptionEdgeResolvers<ContextType>;
+  SubscriptionRevision?: SubscriptionRevisionResolvers<ContextType>;
+  SubscriptionRevisionConnection?: SubscriptionRevisionConnectionResolvers<ContextType>;
+  SubscriptionRevisionEdge?: SubscriptionRevisionEdgeResolvers<ContextType>;
 };
 

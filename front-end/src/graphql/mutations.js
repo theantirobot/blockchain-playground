@@ -7,6 +7,21 @@ export const SUBSCRIBE_MUTATION = gql`
       webhookUrl
       address
       confirmationCount
+      revisions(first: 10) {
+                edges {
+                    node {
+                        id
+                        changeSummary
+                        timestamp
+                        subscription {
+                            id
+                            webhookUrl
+                            address
+                            confirmationCount
+                        }
+                    }
+                }
+            }
     }
   }
 `;
@@ -24,6 +39,21 @@ export const UPDATE_SUBSCRIPTION_MUTATION = gql`
       webhookUrl
       address
       confirmationCount
+      revisions(first: 10) {
+                edges {
+                    node {
+                        id
+                        changeSummary
+                        timestamp
+                        subscription {
+                            id
+                            webhookUrl
+                            address
+                            confirmationCount
+                        }
+                    }
+                }
+            }
     }
   }
 `;

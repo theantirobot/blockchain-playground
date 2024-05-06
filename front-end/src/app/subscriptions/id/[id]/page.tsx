@@ -91,7 +91,7 @@ const Subscription = () => {
       }
       <div className="border rounded-lg space-y-8 p-4">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
             <FormField
               control={form.control}
               name="address"
@@ -133,7 +133,7 @@ const Subscription = () => {
               name="confirmationCount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirmation Cuont</FormLabel>
+                  <FormLabel>Confirmation Count</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="30" {...field} />
                   </FormControl>
@@ -145,7 +145,7 @@ const Subscription = () => {
                 </FormItem>
               )}
             />
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 pt-2">
               <Button type="submit">Update</Button>
               <Button type="button" onClick={() => unsubscribe()}>
                 Delete
@@ -157,14 +157,32 @@ const Subscription = () => {
       {
         // callback history
       }
-      <div className="border rounded-lg flex flex-col gap-2 p-4 flex-1 overflow-hidden">
-        <h2 className="text-lg font-semibold mb-2 flex flex-col">Callback History</h2>
+      <div className="border rounded-lg flex-1 max-h-[50%] min-h-[30%] flex flex-col gap-2 p-4  overflow-hidden">
+        <h2 className="text-lg font-semibold mb-2">Callback History</h2>
 
         <div className="flex-1 overflow-auto flex flex-col gap-2">
           {webhookInvocationHistory &&
-            webhookInvocationHistory.edges
-              .map(({ node }) => node)
-              .map((item, index) => CallbackHistoryItem(item, index))}
+            webhookInvocationHistory.edges.map(({ node }) => node).map((item, index) => CallbackHistoryItem(item, index))}
+        </div>
+      </div>
+
+      <div className="border rounded-lg flex-1 max-h-[50%] min-h-[30%]flex flex-col gap-2 p-4 overflow-hidden">
+        <h2 className="text-lg font-semibold mb-2">Audit History</h2>
+
+        <div className="flex-1 overflow-auto flex flex-col gap-2">
+          {subscriptionData?.revisions?.edges?.map(({ node }) => node).map((item) => (
+            <div key={item.id} className="flex flex-row gap-2">
+              <div>
+                <p className="text-sm">
+                  {new Date(parseInt(item.timestamp)).toLocaleDateString()}{" "}
+                  {new Date(parseInt(item.timestamp)).toLocaleTimeString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm">{item.changeSummary}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

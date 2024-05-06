@@ -1,4 +1,4 @@
-import { SubscribeInput, AddressSubscriptionFilter as SubscriptionFilter } from "./generated/graphql";
+import { SubscribeInput, SubscriptionFilter } from "./generated/graphql";
 
 const subscriptions: { [id: string]: Subscription }= {}
 
@@ -14,6 +14,7 @@ export type Subscription = {
 export type SubscriptionRevision = {
     id: string;
     subscription: Subscription;
+    timestamp: string;
 }
 
 export default { 
@@ -24,7 +25,7 @@ export default {
     getSubscriptionRevisions: async (id: string) => subscriptionRevisions[id] || [],
 
     getSubscription: async (id: string) => {
-        return { ...subscriptions[id], revisions: subscriptionRevisions[id] };
+        return subscriptions[id] && { ...subscriptions[id] };
     },
     deleteSubscription: async (id: string) => {
         try {
@@ -40,7 +41,7 @@ export default {
             throw new Error("Subscription not found");
         }
         subscriptions[id] = { id, ...input };
-        const revision: SubscriptionRevision = { id: `${subscriptionRevisions[id].length}`, subscription: { id, ...input } };
+        const revision: SubscriptionRevision = { id: `${subscriptionRevisions[id].length + 1}`, timestamp: `${Date.now()}`, subscription: { id, ...input } };
         subscriptionRevisions[id].unshift(revision);
         return subscriptions[id];
     },
@@ -54,7 +55,7 @@ export default {
         };
         subscriptions[newSubscription.id] = newSubscription;
         console.log("New subscription id" + newSubscription.id)
-        subscriptionRevisions[newSubscription.id] = [{ id: '0', subscription: newSubscription }];
+        subscriptionRevisions[newSubscription.id] = [{ id: '0', timestamp: `${Date.now()}`, subscription: newSubscription }];
         return newSubscription;
     }
 }

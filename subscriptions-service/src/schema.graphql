@@ -1,11 +1,11 @@
   type Query {
-    subscriptions(first: Int, after: String, filter: AddressSubscriptionFilter): AddressSubscriptionConnection
-    subscription(id: ID!): AddressSubscription
+    subscriptions(first: Int, after: String, filter: SubscriptionFilter): SubscriptionConnection
+    subscription(id: ID!): Sub
   }
 
   type Mutation {
-    subscribe(input: SubscribeInput!): AddressSubscription
-    updateAddressSubscription(id: ID!, input: SubscribeInput!): AddressSubscription
+    subscribe(input: SubscribeInput!): Sub
+    updateSubscription(id: ID!, input: SubscribeInput!): Sub
     unsubscribe(id: ID!): Boolean
   }
 
@@ -15,21 +15,21 @@
     confirmationCount: Int!
   }
 
-  type AddressSubscription @key(fields: "id") {
+  type Sub @key(fields: "id") {
     id: ID!
     webhookUrl: String
     address: String
     confirmationCount: Int
-    revisions(first: Int, after: String): AddressSubscriptionRevisionConnection
+    revisions(first: Int, after: String): SubscriptionRevisionConnection
   }
 
-  type AddressSubscriptionConnection {
-    edges: [AddressSubscriptionEdge]
+  type SubscriptionConnection {
+    edges: [SubscriptionEdge]
     pageInfo: PageInfo
   }
 
-  type AddressSubscriptionEdge {
-    node: AddressSubscription
+  type SubscriptionEdge {
+    node: Sub
     cursor: String!
   }
 
@@ -42,22 +42,23 @@
     id: ID!
   }
 
-  input AddressSubscriptionFilter {
+  input SubscriptionFilter {
     addresses: [String]
  }
 
-  type AddressSubscriptionRevisionConnection {
-    edges: [AddressSubscriptionRevisionEdge]
+  type SubscriptionRevisionConnection {
+    edges: [SubscriptionRevisionEdge]
     pageInfo: PageInfo
   }
 
-  type AddressSubscriptionRevisionEdge {
-    node: AddressSubscriptionRevision
+  type SubscriptionRevisionEdge {
+    node: SubscriptionRevision
     cursor: String!
   }
 
-  type AddressSubscriptionRevision {
+  type SubscriptionRevision {
     id: ID!
+    timestamp: String!
     changeSummary: String!
-    subscription: AddressSubscription!
+    subscription: Sub!
   }

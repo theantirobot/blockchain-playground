@@ -1,19 +1,20 @@
 import { SubscriptionRevision as StoredSubscriptionRevision } from "./subscription-store";
-import { AddressSubscriptionRevision as ApiSubscriptionRevision } from "./generated/graphql";
+import { SubscriptionRevision as ApiSubscriptionRevision } from "./generated/graphql";
 
 const summarizeChange = (from: StoredSubscriptionRevision, to: StoredSubscriptionRevision): ApiSubscriptionRevision => {
     const changes: string[] = [];
     if (from.subscription.address !== to.subscription.address) {
-        changes.push("Confirmation Count");
-    }
-    if (from.subscription.webhookUrl !== to.subscription.webhookUrl) {
         changes.push('Address');
     }
-    if (from.subscription.confirmationCount !== to.subscription.confirmationCount) {
+    if (from.subscription.webhookUrl !== to.subscription.webhookUrl) {
         changes.push(`Webhook URL`);
     }
+    if (from.subscription.confirmationCount !== to.subscription.confirmationCount) {
+        changes.push("Confirmation Count");
+    }
     return {
-        id: from.id,
+        id: to.id,
+        timestamp: to.timestamp,
         subscription: to.subscription,
         changeSummary: `Changed ${changes.join(", ")}`
     };
@@ -24,6 +25,7 @@ export const summarizeChanges = (revisions: StoredSubscriptionRevision[]): ApiSu
         if (index === revisions.length - 1) {
             return {
                 id: revision.id,
+                timestamp: revision.timestamp,
                 subscription: revision.subscription,
                 changeSummary: "Created"
             };
