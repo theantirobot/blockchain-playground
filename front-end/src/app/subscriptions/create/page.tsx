@@ -93,7 +93,7 @@ const CreateSubscriptionComponent = () => {
               name="confirmationCount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirmation Cuont</FormLabel>
+                  <FormLabel>Confirmation Count</FormLabel>
                   <FormControl>
                     <Input placeholder="30" {...field} />
                   </FormControl>

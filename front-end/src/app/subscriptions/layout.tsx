@@ -27,7 +27,7 @@ const SubscriptionsLayout = ({ children }) => {
             <Link href="/subscriptions/create/">+</Link>
           </Button>
         </div>
-        <div className="border rounded-lg p-2 mt-2 flex-1">
+        <div className="border rounded-lg p-2 mt-2 pb-2 flex-1">
           <h2 className="border-b">Subscriptions</h2>
           {subscriptionsLoading && (
             <p className="italic font-light text-center mt-2">Loading...</p>
@@ -42,7 +42,7 @@ const SubscriptionsLayout = ({ children }) => {
               >
                 <Link
                   href={`/subscriptions/id\\${id}`}
-                >{`${abbreviate(address, 16)}->${abbreviate(webhookUrl, 16)}`}</Link>
+                >{`${abbreviate(address, 14)}->${abbreviate(webhookUrl, 14)}`}</Link>
               </div>
             ))}
         </div>
