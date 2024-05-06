@@ -72,7 +72,7 @@ This is a graphql federation service.  It stitches together schemas from multipl
 This manages the subscription info provided by the user.  
 
 ## Hooks
-Async worker that invokes webhooks and stores a history of it. 
+Queue and Async worker that invokes webhooks and stores a history of it. 
 
 ## Indexer
 Polls for new blocks, finds related subscriptions, and invokes their webhook.
