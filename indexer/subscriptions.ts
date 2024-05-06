@@ -31,7 +31,8 @@ export class Subscriptions {
     public async getSubscriptions(addresses?: string[]) {
         const { data } = await this.client.query({
             query: GET_SUBSCRIPTIONS,
-            variables: { filter: addresses }
+            variables: { filter: addresses },
+            fetchPolicy: "network-only"  // Ensure fresh data is fetched every time
         });
         return data.subscriptions.edges.map((edge: any) => edge.node);
     }

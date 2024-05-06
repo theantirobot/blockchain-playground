@@ -20,7 +20,7 @@ const SubscriptionsLayout = ({ children }) => {
 
   return (
     <div className="p-2 bg-background flex flex-row h-screen w-screen gap-3">
-      <div className="pr-1 flex flex-col">
+      <div className="pr-1 flex flex-col min-w-64">
         <div className="flex flex-row gap-1">
           <Input placeholder="Search" />
           <Button asChild>

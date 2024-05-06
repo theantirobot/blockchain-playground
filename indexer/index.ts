@@ -48,7 +48,7 @@ const poller = new EthereumBlockPoller({
         const subs = await subscriptions.getSubscriptions();
         for (let i = 0; i < subs.length; i++) {
             console.log(`Subscription: ${subs[i].id} for address: ${subs[i].address}`);
-            const confirmedBlockNumber = BigInt(block.number) - BigInt(subs[i].confirmationCount) - BigInt(1);
+            const confirmedBlockNumber = BigInt(block.number) - BigInt(subs[i].confirmationCount) + BigInt(1);
             if (confirmedBlockNumber < 1) {
                 continue;
             }

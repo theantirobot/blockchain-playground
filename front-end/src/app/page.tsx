@@ -7,7 +7,7 @@ export default function Home() {
         <h1>Adding a subscription</h1>
         <iframe src="/subscriptions" className="w-full flex-1"></iframe>
       </div>
-      <div className="border rounded-lg flex-1 h-full p-2 bg-white flex flex-col">
+      <div className="border rounded-lg flex-1 h-full p-2 bg-white flex flex-col max-w-[20%]">
         <h1>Submitting a transaction</h1>
         <iframe src="/dapp" className="w-full flex-1"></iframe>
       </div>

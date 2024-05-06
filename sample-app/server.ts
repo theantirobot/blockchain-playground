@@ -11,12 +11,10 @@ const transactions: any[] = [];
 
 // HTTP POST endpoint
 app.post('/onTransaction', (req, res) => {
-    console.log("Received a transaction: " +JSON.stringify(req.body));
     const { transaction } = req.body;
-    if (transactions.findIndex((tx) => tx.hash === transaction.hash) !== -1) {
+    if (transactions.findIndex((tx) => tx.hash === transaction.hash) === -1) {
         transactions.push(transaction);
     }
-    transactions.push(transaction);  // Add received body to transactions array
     broadcast(JSON.stringify(transactions));  // Broadcast updated transactions to all WebSocket clients
     res.status(200).send('Transaction added');
 });
