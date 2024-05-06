@@ -128,7 +128,7 @@ const SendEtherComponent = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Send ETH</Button>
+              <Button type="submit" disabled={sendState=== 'sending'}>Send ETH</Button>
             </form>
           </Form>
         </div>

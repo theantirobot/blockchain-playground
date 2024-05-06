@@ -1,53 +1,61 @@
-import { Subscription, SubscriptionFilter } from "./generated/graphql";
+import { SubscribeInput, SubscriptionFilter } from "./generated/graphql";
 
-const subscriptions: Subscription[] = [
-    // { id: "1", webhookUrl: "www.sqs.com", address: "0x123"},
-    // { id: "2", webhookUrl: "www.sqs.com", address: "0x123"},
-];
+const subscriptions: { [id: string]: Subscription }= {}
 
-export interface SubscriptionInput {
+const subscriptionRevisions: { [id: string]: SubscriptionRevision[] } = {};
+
+export type Subscription = {
+    id: string;
     webhookUrl: string;
     address: string;
     confirmationCount: number;
 }
 
+export type SubscriptionRevision = {
+    id: string;
+    subscription: Subscription;
+    timestamp: string;
+}
+
 export default { 
-    getSubsriptions: async (filter?: SubscriptionFilter | undefined | null) => {
-        if (filter?.addresses && filter.addresses.length > 0) {
-            return subscriptions.filter(sub => filter!.addresses!.includes(sub.address!));
-        }
-        return [...subscriptions]
+    getSubscriptions: async (filter?: SubscriptionFilter | undefined | null) => {
+        const filteredSubscriptions = filter?.addresses?.map(id => subscriptions[id!]).filter(e => !!e) || Object.values(subscriptions)
+        return filteredSubscriptions.map(subscription => ({ ...subscription, revisions: subscriptionRevisions[subscription.id] }));
     },
+    getSubscriptionRevisions: async (id: string) => subscriptionRevisions[id] || [],
+
     getSubscription: async (id: string) => {
-        return subscriptions.find(sub => sub.id === id);
+        return subscriptions[id] && { ...subscriptions[id] };
     },
     deleteSubscription: async (id: string) => {
-        const index = subscriptions.findIndex(sub => sub.id === id);
-        if (index !== -1) {
-            subscriptions.splice(index, 1);
-            return true;
+        try {
+            return !!subscriptions[id];
         }
-        return false;
+        finally {
+            delete subscriptions[id];
+        }
     },
-    updateSubscription: async (id: string, input: SubscriptionInput) => {
-        const subscription = subscriptions.find(sub => sub.id === id);
+    updateSubscription: async (id: string, input: SubscribeInput) => {
+        const subscription = subscriptions[id];
         if (!subscription) {
             throw new Error("Subscription not found");
         }
-        subscription.webhookUrl = input.webhookUrl;
-        subscription.address = input.address;
-        subscription.confirmationCount = input.confirmationCount;
-        return subscription;
+        subscriptions[id] = { id, ...input };
+        const revision: SubscriptionRevision = { id: `${subscriptionRevisions[id].length + 1}`, timestamp: `${Date.now()}`, subscription: { id, ...input } };
+        subscriptionRevisions[id].unshift(revision);
+        return subscriptions[id];
     },
-    putSubscription: async (input: SubscriptionInput): Promise<Subscription> => {
+    putSubscription: async (input: SubscribeInput): Promise<Subscription> => {
         console.log("Creating new subscription");
         const newSubscription:Subscription = {
-            id: (subscriptions.length + 1).toString(),
+            id: (Object.values(subscriptions).length + 1).toString(),
             webhookUrl: input.webhookUrl,
             address: input.address,
             confirmationCount: input.confirmationCount
         };
-        subscriptions.push(newSubscription);
+        subscriptions[newSubscription.id] = newSubscription;
+        console.log("New subscription id" + newSubscription.id)
+        subscriptionRevisions[newSubscription.id] = [{ id: '0', timestamp: `${Date.now()}`, subscription: newSubscription }];
         return newSubscription;
     }
 }

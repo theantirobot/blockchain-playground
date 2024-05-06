@@ -27,7 +27,23 @@ export const GET_SUBSCRIPTION_DETAILS = gql`
       address
       webhookUrl
       confirmationCount
+      revisions(first: 10) {
+                edges {
+                    node {
+                        id
+                        changeSummary
+                        timestamp
+                        subscription {
+                            id
+                            webhookUrl
+                            address
+                            confirmationCount
+                        }
+                    }
+                }
+            }
     }
+
     webhookInvocationHistory(subscriptionId: $id) {
       edges {
         cursor

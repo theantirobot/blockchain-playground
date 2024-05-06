@@ -1,11 +1,11 @@
   type Query {
     subscriptions(first: Int, after: String, filter: SubscriptionFilter): SubscriptionConnection
-    subscription(id: ID!): Subscription
+    subscription(id: ID!): Sub
   }
 
   type Mutation {
-    subscribe(input: SubscribeInput!): Subscription
-    updateSubscription(id: ID!, input: SubscribeInput!): Subscription
+    subscribe(input: SubscribeInput!): Sub
+    updateSubscription(id: ID!, input: SubscribeInput!): Sub
     unsubscribe(id: ID!): Boolean
   }
 
@@ -15,11 +15,12 @@
     confirmationCount: Int!
   }
 
-  type Subscription @key(fields: "id") {
+  type Sub @key(fields: "id") {
     id: ID!
     webhookUrl: String
     address: String
     confirmationCount: Int
+    revisions(first: Int, after: String): SubscriptionRevisionConnection
   }
 
   type SubscriptionConnection {
@@ -28,7 +29,7 @@
   }
 
   type SubscriptionEdge {
-    node: Subscription
+    node: Sub
     cursor: String!
   }
 
@@ -44,3 +45,20 @@
   input SubscriptionFilter {
     addresses: [String]
  }
+
+  type SubscriptionRevisionConnection {
+    edges: [SubscriptionRevisionEdge]
+    pageInfo: PageInfo
+  }
+
+  type SubscriptionRevisionEdge {
+    node: SubscriptionRevision
+    cursor: String!
+  }
+
+  type SubscriptionRevision {
+    id: ID!
+    timestamp: String!
+    changeSummary: String!
+    subscription: Sub!
+  }

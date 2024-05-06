@@ -43,7 +43,7 @@ const FeedPage = () => {
   }, [transactions]);
 
   return (
-    <div className="m-2 flex flex-col gap-2">
+    <div className="m-2 flex flex-col gap-2 overflow-hidden">
       {sortedTransactions.map((tx) => {
         return (
           <Card key={tx.hash} className="p-2">
