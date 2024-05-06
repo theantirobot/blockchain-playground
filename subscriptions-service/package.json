@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage --coverageDirectory=build/coverage",
     "codegen": "graphql-codegen --config codegen.ts",
     "start": "ts-node ./src/start-server.ts"
   },
@@ -15,6 +15,7 @@
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/typescript": "4.0.6",
     "@graphql-codegen/typescript-resolvers": "^4.0.6",
+    "@jest/globals": "^29.7.0",
     "@types/graphql": "^14.5.0",
     "@types/jest": "^29.5.12",
     "graphql-tag": "^2.12.6",
@@ -28,7 +29,6 @@
     "@apollo/gateway": "^2.7.4",
     "@apollo/server": "^4.10.4",
     "@apollo/subgraph": "^2.7.4",
-    "graphql": "^16.8.1",
-    "nanoid": "^5.0.7"
+    "graphql": "^16.8.1"
   }
 }

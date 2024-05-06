@@ -1,5 +1,5 @@
 import { SubscriptionRevision as StoredSubscriptionRevision } from "./subscription-store";
-import { SubscriptionRevision as ApiSubscriptionRevision } from "./generated/graphql";
+import { AddressSubscriptionRevision as ApiSubscriptionRevision } from "./generated/graphql";
 
 const summarizeChange = (from: StoredSubscriptionRevision, to: StoredSubscriptionRevision): ApiSubscriptionRevision => {
     const changes: string[] = [];

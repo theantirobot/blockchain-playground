@@ -1,5 +1,4 @@
-import { nanoid } from "nanoid";
-import { SubscribeInput, SubscriptionFilter } from "./generated/graphql";
+import { SubscribeInput, AddressSubscriptionFilter as SubscriptionFilter } from "./generated/graphql";
 
 const subscriptions: { [id: string]: Subscription }= {}
 
@@ -41,8 +40,9 @@ export default {
             throw new Error("Subscription not found");
         }
         subscriptions[id] = { id, ...input };
-        subscriptionRevisions[id].unshift({ id: nanoid(),  subscription });
-        return subscription;
+        const revision: SubscriptionRevision = { id: `${subscriptionRevisions[id].length}`, subscription: { id, ...input } };
+        subscriptionRevisions[id].unshift(revision);
+        return subscriptions[id];
     },
     putSubscription: async (input: SubscribeInput): Promise<Subscription> => {
         console.log("Creating new subscription");
@@ -53,7 +53,8 @@ export default {
             confirmationCount: input.confirmationCount
         };
         subscriptions[newSubscription.id] = newSubscription;
-        subscriptionRevisions[newSubscription.id] = [{ id: nanoid(), subscription: newSubscription }];
+        console.log("New subscription id" + newSubscription.id)
+        subscriptionRevisions[newSubscription.id] = [{ id: '0', subscription: newSubscription }];
         return newSubscription;
     }
 }

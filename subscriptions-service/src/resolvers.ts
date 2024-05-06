@@ -1,5 +1,5 @@
 import { MyContext } from "./context";
-import { Resolvers, Subscription, SubscriptionConnection, SubscriptionRevisionConnection, SubscriptionRevisionsArgs } from "./generated/graphql";
+import { Resolvers, AddressSubscription, AddressSubscriptionConnection, AddressSubscriptionRevisionConnection, AddressSubscriptionRevisionsArgs } from "./generated/graphql";
 import { summarizeChanges } from "./revision-annotator";
 import { cleanUpRevisions } from "./revision-janitor";
 import SubscriptionStore from "./subscription-store";
@@ -14,9 +14,9 @@ const arrayToConnection = (array: any[]) => {
 }
 export const resolvers: Resolvers = {
     Query: {
-        subscriptions: async (_: any, { filter }): Promise<SubscriptionConnection> => {
+        subscriptions: async (_: any, { filter }): Promise<AddressSubscriptionConnection> => {
             console.log("Subscriptions");
-            return arrayToConnection(await SubscriptionStore.getSubscriptions(filter)) as SubscriptionConnection;
+            return arrayToConnection(await SubscriptionStore.getSubscriptions(filter)) as AddressSubscriptionConnection;
         },
         subscription: async (_: any, { id }: any) => {
             console.log("Subscription");
@@ -24,7 +24,7 @@ export const resolvers: Resolvers = {
             if (!subscription) {
                 throw new Error("Subscription not found");
             }            
-            return subscription;
+            return subscription as AddressSubscription;
         }
     },
     Mutation: {
@@ -32,7 +32,7 @@ export const resolvers: Resolvers = {
             console.log("Creating new subscription");
             return SubscriptionStore.putSubscription(input);
         },
-        updateSubscription: async (_: any, { id, input }: any): Promise<Subscription> => {
+        updateAddressSubscription: async (_: any, { id, input }: any): Promise<AddressSubscription> => {
             console.log("Updating subscription");
             return SubscriptionStore.updateSubscription(id, input);
         
@@ -42,13 +42,13 @@ export const resolvers: Resolvers = {
             return SubscriptionStore.deleteSubscription(id);
         }
     },
-    Subscription: {
-        revisions: async (parent: Subscription, params: SubscriptionRevisionsArgs): Promise<SubscriptionRevisionConnection> => {
+    AddressSubscription: {
+        revisions: async (parent: AddressSubscription, params: AddressSubscriptionRevisionsArgs): Promise<AddressSubscriptionRevisionConnection> => {
             console.log("Subscription revisions");
-            const subRevisions = await SubscriptionStore.getSubscriptionRevisions("abc");
+            const subRevisions = await SubscriptionStore.getSubscriptionRevisions(parent.id);
             const prunedRevisions = cleanUpRevisions(subRevisions);
             const annotatedRevisions = summarizeChanges(prunedRevisions);
-            return arrayToConnection(annotatedRevisions) as SubscriptionRevisionConnection;
+            return arrayToConnection(annotatedRevisions) as AddressSubscriptionRevisionConnection;
         }
     }
 }

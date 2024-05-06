@@ -1,11 +1,11 @@
   type Query {
-    subscriptions(first: Int, after: String, filter: SubscriptionFilter): SubscriptionConnection
-    subscription(id: ID!): Subscription
+    subscriptions(first: Int, after: String, filter: AddressSubscriptionFilter): AddressSubscriptionConnection
+    subscription(id: ID!): AddressSubscription
   }
 
   type Mutation {
-    subscribe(input: SubscribeInput!): Subscription
-    updateSubscription(id: ID!, input: SubscribeInput!): Subscription
+    subscribe(input: SubscribeInput!): AddressSubscription
+    updateAddressSubscription(id: ID!, input: SubscribeInput!): AddressSubscription
     unsubscribe(id: ID!): Boolean
   }
 
@@ -15,21 +15,21 @@
     confirmationCount: Int!
   }
 
-  type Subscription @key(fields: "id") {
+  type AddressSubscription @key(fields: "id") {
     id: ID!
     webhookUrl: String
     address: String
     confirmationCount: Int
-    revisions(first: Int, after: String): SubscriptionRevisionConnection
+    revisions(first: Int, after: String): AddressSubscriptionRevisionConnection
   }
 
-  type SubscriptionConnection {
-    edges: [SubscriptionEdge]
+  type AddressSubscriptionConnection {
+    edges: [AddressSubscriptionEdge]
     pageInfo: PageInfo
   }
 
-  type SubscriptionEdge {
-    node: Subscription
+  type AddressSubscriptionEdge {
+    node: AddressSubscription
     cursor: String!
   }
 
@@ -42,22 +42,22 @@
     id: ID!
   }
 
-  input SubscriptionFilter {
+  input AddressSubscriptionFilter {
     addresses: [String]
  }
 
-  type SubscriptionRevisionConnection {
-    edges: [SubscriptionRevisionEdge]
+  type AddressSubscriptionRevisionConnection {
+    edges: [AddressSubscriptionRevisionEdge]
     pageInfo: PageInfo
   }
 
-  type SubscriptionRevisionEdge {
-    node: SubscriptionRevision
+  type AddressSubscriptionRevisionEdge {
+    node: AddressSubscriptionRevision
     cursor: String!
   }
 
-  type SubscriptionRevision {
+  type AddressSubscriptionRevision {
     id: ID!
     changeSummary: String!
-    subscription: Subscription!
+    subscription: AddressSubscription!
   }
